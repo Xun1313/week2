@@ -1,69 +1,36 @@
 <template>
   <div id="app">
     <div class="all-card">
-      <div class="empty">
-        <template v-for="(item,index) in card">
-          <template v-if="index<=6">
-            <!--  -->
-            <img :src="item.bgi" class="fill" alt draggable="true" />
-          </template>
-        </template>
+      <div class="empty1" draggable="true">
+        
       </div>
 
-      <div class="empty">
-        <template v-for="(item,index) in card">
-          <template v-if="index>=7&&index<=13">
-            <img :src="item.bgi" class="fill" alt draggable="true" />
-          </template>
-        </template>
+      <div class="empty1">
+        
       </div>
 
-      <div class="empty">
-        <template v-for="(item,index) in card">
-          <template v-if="index>=14&&index<=20">
-            <img :src="item.bgi" class="fill" alt draggable="true" />
-          </template>
-        </template>
+      <div class="empty1">
+        
       </div>
 
-      <div class="empty">
-        <template v-for="(item,index) in card">
-          <template v-if="index>=21&&index<=27">
-            <img :src="item.bgi" class="fill" alt draggable="true" />
-          </template>
-        </template>
+      <div class="empty1">
+        
       </div>
 
-      <div class="empty">
-        <template v-for="(item,index) in card">
-          <template v-if="index>=28&&index<=33">
-            <img :src="item.bgi" class="fill" alt draggable="true" />
-          </template>
-        </template>
+      <div class="empty1">
+        
       </div>
 
-      <div class="empty">
-        <template v-for="(item,index) in card">
-          <template v-if="index>=34&&index<=39">
-            <img :src="item.bgi" class="fill" alt draggable="true" />
-          </template>
-        </template>
+      <div class="empty1">
+        
       </div>
 
-      <div class="empty">
-        <template v-for="(item,index) in card">
-          <template v-if="index>=40&&index<=45">
-            <img :src="item.bgi" class="fill" alt draggable="true" />
-          </template>
-        </template>
+      <div class="empty1">
+        
       </div>
 
-      <div class="empty">
-        <template v-for="(item,index) in card">
-          <template v-if="index>=46&&index<=51">
-            <img :src="item.bgi" class="fill" alt draggable="true" />
-          </template>
-        </template>
+      <div class="empty1">
+        
       </div>
     </div>
   </div>
@@ -71,6 +38,19 @@
 
 <style lang="scss" scoped>
 @import './assets/_variable.scss';
+.cardImg{
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+  width: 220px;
+  height: 300px;
+}
+img{
+  z-index: 5;
+}
+.allEmpty{
+  z-index: 10;
+}
 .all-card {
   display: flex;
   justify-content: center;
@@ -523,33 +503,58 @@ export default {
       //類似mouseup時啟動
       console.log("end");
       //this.classList.remove("invisible", "hold");
+    },
+    allDom(start,end,emptyIndex){
+        //console.log(start,end,emptyIndex);
+        for (let i = start; i <end ; i++) {
+          console.log(start,end,emptyIndex);
+        const {bgi,color,mark,num}=this.card[i]
+        const img=document.createElement('IMG')
+        //const div1=document.createElement('DIV')
+        //img.style.backgroundImage=bgi
+        img.src=bgi
+        img.dataset.color=color
+        img.dataset.mark=mark
+        img.dataset.num=num
+        img.setAttribute('draggable',false)
+        //img.classList.add('cardImg')
+        const emptyNum= [...document.querySelectorAll(`.empty${i+1}`)][emptyIndex]
+        emptyNum.appendChild(img)
+        const div=document.createElement('DIV')
+        div.setAttribute('draggable',true)
+        div.classList.add(`empty${i+2}`,'allEmpty')
+        emptyNum.appendChild(div)
+      }
     }
   },
   mounted() {
-    const empties = document.querySelectorAll(".empty");
+    const empty1 = [...document.querySelectorAll(".empty1")];
     const fill = [...document.querySelectorAll(".fill")];
+    const [epone,eptwo,epthree,epfour,epfive,epsix,epseven,epeight]=empty1
+    //console.log(epone,eptwo,epthree,epfour,epfive,epsix,epseven,epeight);
+    
 
-    empties.forEach(e => {
+    this.allDom(0,6,0)
+    //this.allDom(7,13,1)
+
+
+
+    empty1.forEach(e => {
       e.addEventListener("dragover", this.dragover);
       e.addEventListener("dragenter", this.dragenter);
       e.addEventListener("dragleave", this.dragleave);
       e.addEventListener("drop", this.drop);
     });
 
-    fill.forEach(e => {
+
+
+    /* fill.forEach(e => {
       e.addEventListener("dragstart", this.dragstart);
       e.addEventListener("dragend", this.dragend);
-      /* e.addEventListener('drag', drag) */
-    });
+      e.addEventListener('drag', drag)
+    }); */
 
-    /* function drag() {
-        類似mouseup時啟動
-        console.log('drag')
-      } */
+
   }
 };
 </script>
-
-
-<style lang="scss">
-</style>
