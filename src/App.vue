@@ -1,82 +1,129 @@
 <template>
   <div id="app">
     <div class="all-card">
-      <div class="empty1" draggable="true">
-        
+      <div class="card-container">
+        <div class="card-item" v-for="(item, index) in 4" :key="index+87">
+          <div class="card-temp"></div>
+        </div>
+
+        <div class="card-item" v-for="(item, index) in 4" :key="index-87">
+          <div class="card-done"></div>
+        </div>
       </div>
 
-      <div class="empty1">
-        
-      </div>
+      <div class="empty">
+        <div class="empty1" draggable="true"></div>
 
-      <div class="empty1">
-        
-      </div>
+        <div class="empty1" draggable="true"></div>
 
-      <div class="empty1">
-        
-      </div>
+        <div class="empty1" draggable="true"></div>
 
-      <div class="empty1">
-        
-      </div>
+        <div class="empty1" draggable="true"></div>
 
-      <div class="empty1">
-        
-      </div>
+        <div class="empty1" draggable="true"></div>
 
-      <div class="empty1">
-        
-      </div>
+        <div class="empty1" draggable="true"></div>
 
-      <div class="empty1">
-        
+        <div class="empty1" draggable="true"></div>
+
+        <div class="empty1" draggable="true"></div>
       </div>
     </div>
   </div>
 </template>
 
-<style lang="scss" scoped>
-@import './assets/_variable.scss';
-.cardImg{
-  background-size: cover;
-  background-repeat: no-repeat;
-  background-position: center;
-  width: 220px;
-  height: 300px;
+<style lang="scss">
+@import "./assets/_variable.scss";
+@import "./assets/_mixin.scss";
+@import "./assets/_grid.scss";
+.empty1:nth-child(4),.card-item:nth-child(4){
+  margin-right: auto!important;
+  @include lapTop(){
+    margin-right:10px!important;
+  }
 }
-img{
-  z-index: 5;
+.empty1:nth-child(5),.card-item:nth-child(5){
+  margin-left: auto!important;
+  @include lapTop(){
+    margin-left:10px!important;
+  }
 }
-.allEmpty{
-  z-index: 10;
+.card-container {
+  display: flex;
+  width: 100%;
+  //justify-content: center;
+  .card-item {
+    width: 10%;
+    height: 150px;
+    background-color: $cache;
+    margin:0 10px;
+  }
 }
+
+@each $name, $val in $bgi {
+  .card-item:nth-child(#{$name + 4}) > .card-done {
+    width: 30px;
+    height: 30px;
+    @include bg();
+    background-image: url("../src/assets/card/"+$val+"/"+$val+".svg");
+  }
+}
+
 .all-card {
   display: flex;
-  justify-content: center;
-  overflow:hidden;
+  flex-direction: column;
+  //justify-content: center;
+  align-items: center;
+  overflow: hidden;
   height: 100vh;
-  background-color:$background ;
-  .empty {
+  width: 100%;
+  @include lapTop{
+    padding: 30px 30px;
+  };
+  @include pad{
+    padding: 30px 15px;
+  };
+  @include phone{
+    padding: 30px 10px;
+  };
+  padding: 30px 60px;
+  background-color: $background;
+  img {
+    position: relative;
+    left: 0;
+    width: 100%;
+    height: auto;
+  }
+  /* img:first-child {
+    bottom: 65%;
+  } */
+}
+.empty {
+  display: flex;
+  //justify-content: center;
+  .empty1 {
+    margin:30px 10px;
+    //margin-top: 200px;
+    width: 10%;
+    height: 100%;
     display: flex;
     flex-direction: column;
-    width: 8%;
-    margin: 200px 10px;
-    img {
-      position: relative;
-      left: 0;
+  }
+}
+
+@for $i from 2 through 15 {
+  .empty#{$i} {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    margin-top: -133%;
+    /* bottom: 5%*$i;
+    position: relative;
+    left: 0; */
+    > img {
       width: 100%;
       height: auto;
-    }
-    @for $i from 2 through 20 {
-      img:nth-child(#{$i}) {
-        bottom: 65.6% *$i;
-        //transform:translateY(-11.3% * $i) ;
-      }
-    }
-    img:first-child {
-      //transform: translateY(-11%)
-      bottom: 65%;
     }
   }
 }
@@ -504,40 +551,43 @@ export default {
       console.log("end");
       //this.classList.remove("invisible", "hold");
     },
-    allDom(start,end,emptyIndex){
-        //console.log(start,end,emptyIndex);
-        for (let i = start; i <end ; i++) {
-          console.log(start,end,emptyIndex);
-        const {bgi,color,mark,num}=this.card[i]
-        const img=document.createElement('IMG')
-        //const div1=document.createElement('DIV')
-        //img.style.backgroundImage=bgi
-        img.src=bgi
-        img.dataset.color=color
-        img.dataset.mark=mark
-        img.dataset.num=num
-        img.setAttribute('draggable',false)
-        //img.classList.add('cardImg')
-        const emptyNum= [...document.querySelectorAll(`.empty${i+1}`)][emptyIndex]
-        emptyNum.appendChild(img)
-        const div=document.createElement('DIV')
-        div.setAttribute('draggable',true)
-        div.classList.add(`empty${i+2}`,'allEmpty')
-        emptyNum.appendChild(div)
+    allDom(emptyIndex, dataStart, columnNum) {
+      let endContainer = columnNum - 1; //讓最後一次迴圈不要再多增加一個容器
+      for (let i = 0; i < columnNum; i++) {
+        const { bgi, color, mark, num } = this.card[i + dataStart];
+        const img = document.createElement("IMG");
+        img.src = bgi;
+        img.dataset.color = color;
+        img.dataset.mark = mark;
+        img.dataset.num = num;
+        img.setAttribute("draggable", false);
+        const emptyNum = [...document.querySelectorAll(`.empty${i + 1}`)][
+          emptyIndex
+        ];
+        emptyNum.appendChild(img);
+        if (i !== endContainer) {
+          const div = document.createElement("DIV");
+          div.setAttribute("draggable", true);
+          div.classList.add(`empty${i + 2}`);
+          emptyNum.appendChild(div);
+        }
       }
     }
   },
   mounted() {
     const empty1 = [...document.querySelectorAll(".empty1")];
-    const fill = [...document.querySelectorAll(".fill")];
-    const [epone,eptwo,epthree,epfour,epfive,epsix,epseven,epeight]=empty1
-    //console.log(epone,eptwo,epthree,epfour,epfive,epsix,epseven,epeight);
-    
+    /* const fill = [...document.querySelectorAll(".fill")];
+    const [epone,eptwo,epthree,epfour,epfive,epsix,epseven,epeight]=empty1 */
 
-    this.allDom(0,6,0)
-    //this.allDom(7,13,1)
+    this.allDom(0, 0, 7);
+    this.allDom(1, 7, 7);
+    this.allDom(2, 14, 7);
+    this.allDom(3, 21, 7);
 
-
+    this.allDom(4, 28, 6);
+    this.allDom(5, 34, 6);
+    this.allDom(6, 40, 6);
+    this.allDom(7, 46, 6);
 
     empty1.forEach(e => {
       e.addEventListener("dragover", this.dragover);
@@ -546,15 +596,11 @@ export default {
       e.addEventListener("drop", this.drop);
     });
 
-
-
     /* fill.forEach(e => {
       e.addEventListener("dragstart", this.dragstart);
       e.addEventListener("dragend", this.dragend);
       e.addEventListener('drag', drag)
     }); */
-
-
   }
 };
 </script>
