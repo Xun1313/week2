@@ -7,26 +7,27 @@
         </div>
 
         <div class="card-item" v-for="(item, index) in 4" :key="index-87">
+          <div class="card-icon"></div>
           <div class="card-done"></div>
         </div>
       </div>
 
       <div class="empty">
-        <div class="empty1" draggable="true"></div>
+        <div class="empty1" draggable="false"></div>
 
-        <div class="empty1" draggable="true"></div>
+        <div class="empty1" draggable="false"></div>
 
-        <div class="empty1" draggable="true"></div>
+        <div class="empty1" draggable="false"></div>
 
-        <div class="empty1" draggable="true"></div>
+        <div class="empty1" draggable="false"></div>
 
-        <div class="empty1" draggable="true"></div>
+        <div class="empty1" draggable="false"></div>
 
-        <div class="empty1" draggable="true"></div>
+        <div class="empty1" draggable="false"></div>
 
-        <div class="empty1" draggable="true"></div>
+        <div class="empty1" draggable="false"></div>
 
-        <div class="empty1" draggable="true"></div>
+        <div class="empty1" draggable="false"></div>
       </div>
     </div>
   </div>
@@ -36,16 +37,18 @@
 @import "./assets/_variable.scss";
 @import "./assets/_mixin.scss";
 @import "./assets/_grid.scss";
-.empty1:nth-child(4),.card-item:nth-child(4){
-  margin-right: auto!important;
-  @include lapTop(){
-    margin-right:10px!important;
+.empty1:nth-child(4),
+.card-item:nth-child(4) {
+  margin-right: auto !important;
+  @include lapTop() {
+    margin-right: 10px !important;
   }
 }
-.empty1:nth-child(5),.card-item:nth-child(5){
-  margin-left: auto!important;
-  @include lapTop(){
-    margin-left:10px!important;
+.empty1:nth-child(5),
+.card-item:nth-child(5) {
+  margin-left: auto !important;
+  @include lapTop() {
+    margin-left: 10px !important;
   }
 }
 .card-container {
@@ -54,20 +57,35 @@
   //justify-content: center;
   .card-item {
     width: 10%;
-    height: 150px;
+    height: 0;
+    padding-bottom: 15.6%;
     background-color: $cache;
-    margin:0 10px;
+    margin: 0 10px;
+    position: relative;
+    > .card-temp,
+    > .card-done {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      > div {
+        margin-top: 0;
+      }
+    }
   }
 }
 
-@each $name, $val in $bgi {
-  .card-item:nth-child(#{$name + 4}) > .card-done {
-    width: 30px;
-    height: 30px;
+/* @each $name, $val in $bgi {
+  .card-item:nth-child(#{$name + 4}) > .card-icon {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%,-50%);
+    width: 45px;
+    height: 45px;
     @include bg();
     background-image: url("../src/assets/card/"+$val+"/"+$val+".svg");
   }
-}
+} */
 
 .all-card {
   display: flex;
@@ -77,15 +95,15 @@
   overflow: hidden;
   height: 100vh;
   width: 100%;
-  @include lapTop{
+  @include lapTop {
     padding: 30px 30px;
-  };
-  @include pad{
+  }
+  @include pad {
     padding: 30px 15px;
-  };
-  @include phone{
+  }
+  @include phone {
     padding: 30px 10px;
-  };
+  }
   padding: 30px 60px;
   background-color: $background;
   img {
@@ -100,9 +118,10 @@
 }
 .empty {
   display: flex;
+  width: 100%;
   //justify-content: center;
   .empty1 {
-    margin:30px 10px;
+    margin: 30px 10px;
     //margin-top: 200px;
     width: 10%;
     height: 100%;
@@ -127,12 +146,23 @@
     }
   }
 }
+.none {
+  display: none;
+}
+.test {
+  width: 100%;
+  height: auto;
+  background-color: purple;
+}
 </style>
 
 <script>
+import $ from "jquery";
+import { log } from "util";
 export default {
   data() {
     return {
+      undo: "",
       card: [
         {
           bgi: require("./assets/card/heart/新接龍_紅心A.svg"),
@@ -514,42 +544,125 @@ export default {
   methods: {
     dragover(e) {
       //console.log(this.childNodes);
+      e.stopPropagation();
       e.preventDefault();
-      //console.log("dragover");
-      console.log(e);
+      console.log("dragover");
+      //console.log(e);
     },
     dragenter(e) {
+      e.stopPropagation();
       //e.preventDefault()
-      e.currentTarget.classList.add("hovered");
-      //console.log('dragenter')
+      //e.currentTarget.classList.add("hovered");
+      console.log("dragenter");
     },
     dragleave(e) {
-      e.currentTarget.classList.remove("hovered");
-      //console.log('dragleave')
+      e.stopPropagation();
+      //e.currentTarget.classList.remove("hovered");
+      console.log("dragleave");
     },
     drop(e) {
-      //this.appendChild(fill[1]);
-      //console.log('drop')
+      e.stopPropagation();
+      const undo = e.dataTransfer.getData("text/plain");
+      const {
+        mark: origMark,
+        num: origNum
+      } = e.currentTarget.children[0].dataset;
+      const [mark, num] = undo.split(",");
+      console.log(origMark, origNum, mark, num);
+
+      const resultMark = mark !== origMark;
+      const resultNum = origNum - num === 1;
+      const isContainer = e.currentTarget.closest(".card-item"); //證明他的父層上不是在暫存卡牌的容器裡
+      if (resultMark && resultNum && isContainer === null) {
+        const drag = document.querySelector(
+          `img[data-mark='${mark}'][data-num='${num}']`
+        ).parentElement;
+        e.currentTarget.appendChild(drag);
+      }
+      console.log("drop");
     },
-    dragstart() {
+    dragstart(e) {
+      e.stopPropagation();
+      const classList = e.currentTarget.classList;
+      window.setTimeout(() => {
+        classList.add("none");
+      }, 0);
+      const { mark, num } = e.target.children[0].dataset;
+      e.dataTransfer.setData("text/plain", `${mark},${num}`);
       //類似mousemove時啟動
       console.log("start");
-      //this.classList.add("hold");
-      //hold是內容的邊框有顏色
-
-      setTimeout(() => {
-        //this.classList.add("invisible");
-        //invisible是隱藏起來
-      }, 0);
     },
     /* function drag() {
         類似mouseup時啟動
         console.log('drag')
       } */
-    dragend() {
+    dragend(e) {
+      e.stopPropagation();
+      e.currentTarget.setAttribute("draggable", false);
+      e.currentTarget.classList.remove("none");
       //類似mouseup時啟動
-      console.log("end");
-      //this.classList.remove("invisible", "hold");
+    },
+    dragoverTemp(e) {
+      e.preventDefault();
+      e.stopPropagation();
+    },
+    dropTemp(e) {
+      e.stopPropagation();
+      const undo = e.dataTransfer.getData("text/plain");
+      const [mark, num] = undo.split(",");
+      const drag = document.querySelector(
+        `img[data-mark='${mark}'][data-num='${num}']`
+      );
+      const dragNext = drag.nextElementSibling;
+      console.log(e.currentTarget.children.length);
+      if (e.currentTarget.children.length > 0 && dragNext !== null) {
+        //證明暫存卡牌的容器裡目前只有一張卡
+        return false;
+      } else {
+        const emptyNum = drag.parentElement;
+        e.currentTarget.appendChild(emptyNum);
+      }
+    },
+    mousedown(e) {
+      //判斷是否可移動,出現影子,用draggable的true/false
+      e.stopPropagation();
+      let num = [];
+      let color = [];
+      let colorResult = [];
+      let numResult = [];
+      const allImg = $(e.currentTarget).find("img");
+      for (let i = 0; i < allImg.length; i++) {
+        num.push(parseInt(allImg[i].dataset.num));
+        color.push(allImg[i].dataset.color);
+      }
+      color.forEach((e, i, arr) => {
+        if (arr[i + 1] === undefined) {
+          return false;
+        } else {
+          colorResult.push(e !== arr[i + 1]);
+        }
+      });
+      const result1 = colorResult.every(e => {
+        return e === true;
+      });
+
+      num.forEach((e, i, arr) => {
+        if (arr[i + 1] === undefined) {
+          return false;
+        } else {
+          numResult.push(e - 1 === arr[i + 1]);
+        }
+      });
+
+      const result2 = numResult.every(e => {
+        return e === true;
+      });
+      //console.log(color,num,colorResult,numResult,result1,result2);
+      if (result1 && result2) {
+        e.currentTarget.setAttribute("draggable", true);
+      } else if (color.length === 1 && num.length === 1) {
+        e.currentTarget.setAttribute("draggable", true);
+      }
     },
     allDom(emptyIndex, dataStart, columnNum) {
       let endContainer = columnNum - 1; //讓最後一次迴圈不要再多增加一個容器
@@ -567,7 +680,7 @@ export default {
         emptyNum.appendChild(img);
         if (i !== endContainer) {
           const div = document.createElement("DIV");
-          div.setAttribute("draggable", true);
+          div.setAttribute("draggable", false);
           div.classList.add(`empty${i + 2}`);
           emptyNum.appendChild(div);
         }
@@ -575,10 +688,6 @@ export default {
     }
   },
   mounted() {
-    const empty1 = [...document.querySelectorAll(".empty1")];
-    /* const fill = [...document.querySelectorAll(".fill")];
-    const [epone,eptwo,epthree,epfour,epfive,epsix,epseven,epeight]=empty1 */
-
     this.allDom(0, 0, 7);
     this.allDom(1, 7, 7);
     this.allDom(2, 14, 7);
@@ -589,18 +698,52 @@ export default {
     this.allDom(6, 40, 6);
     this.allDom(7, 46, 6);
 
-    empty1.forEach(e => {
+    for (let i = 1; i < 8; i++) {
+      [...document.querySelectorAll(`.empty${i}`)].forEach(e => {
+        e.addEventListener("dragover", this.dragover);
+        /* e.addEventListener("dragenter", this.dragenter);
+        e.addEventListener("dragleave", this.dragleave); */
+        e.addEventListener("drop", this.drop);
+
+        e.addEventListener("dragstart", this.dragstart);
+        e.addEventListener("dragend", this.dragend);
+        //e.addEventListener("drag", this.drag);
+        e.addEventListener("mousedown", this.mousedown);
+        //e.addEventListener("mouseup", this.mouseup);
+      });
+
+      [...document.querySelectorAll(".card-temp")].forEach(e => {
+        e.addEventListener("dragover", this.dragoverTemp);
+        e.addEventListener("drop", this.dropTemp);
+      });
+
+      [...document.querySelectorAll(".card-done")].forEach(e => {
+        e.addEventListener("dragover", this.dragoverDone);
+        e.addEventListener("drop", this.dropTempDone);
+      });
+      /* [...document.querySelectorAll(`.empty${i} img`)].forEach(e=>{
+        e.addEventListener("keydown", this.keydown);
+        e.addEventListener("keyup", this.keyup);
+      }) */
+    }
+
+    /* empty1.forEach(e => {
       e.addEventListener("dragover", this.dragover);
       e.addEventListener("dragenter", this.dragenter);
       e.addEventListener("dragleave", this.dragleave);
       e.addEventListener("drop", this.drop);
-    });
+    }); */
 
     /* fill.forEach(e => {
       e.addEventListener("dragstart", this.dragstart);
       e.addEventListener("dragend", this.dragend);
-      e.addEventListener('drag', drag)
+      e.addEventListener('drag', this.drag)
     }); */
+  },
+  created() {
+    this.card = this.card.sort((a, b) => {
+      return a.id - b.id;
+    });
   }
 };
 </script>
