@@ -6,9 +6,9 @@
           <div class="card-temp"></div>
         </div>
 
-        <div class="card-item" v-for="(item, index) in 4" :key="index-87">
+        <div class="card-item" v-for="(item, index) in mark" :key="index-87">
           <div class="card-icon"></div>
-          <div class="card-done"></div>
+          <div class="card-done" :class="item"></div>
         </div>
       </div>
 
@@ -28,6 +28,8 @@
         <div class="empty1" draggable="false"></div>
 
         <div class="empty1" draggable="false"></div>
+
+        <div class="undo" @click="undoHandler($event)">undo</div>
       </div>
     </div>
   </div>
@@ -67,25 +69,34 @@
       position: absolute;
       width: 100%;
       height: 100%;
-      > div {
-        margin-top: 0;
+      *:first-child {
+        margin-top: 0%;
+      }
+      * {
+        margin-top: -156%;
       }
     }
   }
 }
 
-/* @each $name, $val in $bgi {
+@each $name, $val in $bgi {
   .card-item:nth-child(#{$name + 4}) > .card-icon {
     position: absolute;
     top: 50%;
     left: 50%;
-    transform: translate(-50%,-50%);
+    transform: translate(-50%, -50%);
     width: 45px;
     height: 45px;
     @include bg();
     background-image: url("../src/assets/card/"+$val+"/"+$val+".svg");
   }
-} */
+}
+.card-item:nth-child(6) > .card-icon {
+  width: 40px;
+}
+.card-item:nth-child(8) > .card-icon {
+  width: 50px;
+}
 
 .all-card {
   display: flex;
@@ -128,6 +139,17 @@
     display: flex;
     flex-direction: column;
   }
+  .undo {
+    position: fixed;
+    bottom: 10px;
+    right: 10px;
+    background-color: $cache;
+    cursor: pointer;
+    border-radius: 50%;
+    &:hover {
+      background-color: darken($cache, 15%);
+    }
+  }
 }
 
 @for $i from 2 through 15 {
@@ -137,9 +159,6 @@
     display: flex;
     flex-direction: column;
     margin-top: -133%;
-    /* bottom: 5%*$i;
-    position: relative;
-    left: 0; */
     > img {
       width: 100%;
       height: auto;
@@ -149,20 +168,17 @@
 .none {
   display: none;
 }
-.test {
-  width: 100%;
-  height: auto;
-  background-color: purple;
-}
 </style>
 
 <script>
 import $ from "jquery";
-import { log } from "util";
+/* import { log } from "util"; */
 export default {
   data() {
     return {
-      undo: "",
+      mark: ["club", "diamond", "spade", "heart"],
+      allUndo: [],
+      undoNum: 0,
       card: [
         {
           bgi: require("./assets/card/heart/新接龍_紅心A.svg"),
@@ -243,7 +259,7 @@ export default {
         },
         {
           //bgi: require("./assets/card/heart/新接龍_紅心.svg"),
-          bgi: "http://lorempixel.com/150/300/cats",
+          bgi: "https://picsum.photos/id/54/150/300",
           color: "red",
           mark: "heart",
           num: 12,
@@ -258,7 +274,7 @@ export default {
         },
         {
           //bgi: require("./assets/card/diamond/新接龍_方塊.svg"),
-          bgi: "http://lorempixel.com/150/300/cats",
+          bgi: "https://picsum.photos/id/54/150/300",
           color: "red",
           mark: "diamond",
           num: 1,
@@ -336,7 +352,7 @@ export default {
         },
         {
           //bgi: require("./assets/card/diamond/新接龍_方塊.svg"),
-          bgi: "http://lorempixel.com/150/300/cats",
+          bgi: "https://picsum.photos/id/54/150/300",
           color: "red",
           mark: "diamond",
           num: 12,
@@ -351,7 +367,7 @@ export default {
         },
         {
           //bgi: require("./assets/card/club/新接龍_梅花.svg"),
-          bgi: "http://lorempixel.com/150/300/cats",
+          bgi: "https://picsum.photos/id/54/150/300",
           color: "black",
           mark: "club",
           num: 1,
@@ -394,7 +410,7 @@ export default {
         },
         {
           //bgi: require("./assets/card/club/新接龍_梅花.svg"),
-          bgi: "http://lorempixel.com/150/300/cats",
+          bgi: "https://picsum.photos/id/54/150/300",
           color: "black",
           mark: "club",
           num: 7,
@@ -409,7 +425,7 @@ export default {
         },
         {
           //bgi: require("./assets/card/club/新接龍_梅花9.svg"),
-          bgi: "http://lorempixel.com/150/300/cats",
+          bgi: "https://picsum.photos/id/54/150/300",
           color: "black",
           mark: "club",
           num: 9,
@@ -431,7 +447,7 @@ export default {
         },
         {
           //bgi: require("./assets/card/club/新接龍_梅花.svg"),
-          bgi: "http://lorempixel.com/150/300/cats",
+          bgi: "https://picsum.photos/id/54/150/300",
           color: "black",
           mark: "club",
           num: 12,
@@ -446,7 +462,7 @@ export default {
         },
         {
           //bgi: require("./assets/card/spade/新接龍_黑桃.svg"),
-          bgi: "http://lorempixel.com/150/300/cats",
+          bgi: "https://picsum.photos/id/54/150/300",
           color: "black",
           mark: "spade",
           num: 1,
@@ -454,7 +470,7 @@ export default {
         },
         {
           //bgi: require("./assets/card/spade/新接龍_黑桃.svg"),
-          bgi: "http://lorempixel.com/150/300/cats",
+          bgi: "https://picsum.photos/id/54/150/300",
           color: "black",
           mark: "spade",
           num: 2,
@@ -525,7 +541,7 @@ export default {
         },
         {
           //bgi: require("./assets/card/spade/新接龍_黑桃.svg"),
-          bgi: "http://lorempixel.com/150/300/cats",
+          bgi: "https://picsum.photos/id/54/150/300",
           color: "black",
           mark: "spade",
           num: 12,
@@ -543,43 +559,37 @@ export default {
   },
   methods: {
     dragover(e) {
-      //console.log(this.childNodes);
       e.stopPropagation();
       e.preventDefault();
-      console.log("dragover");
-      //console.log(e);
-    },
-    dragenter(e) {
-      e.stopPropagation();
-      //e.preventDefault()
-      //e.currentTarget.classList.add("hovered");
-      console.log("dragenter");
-    },
-    dragleave(e) {
-      e.stopPropagation();
-      //e.currentTarget.classList.remove("hovered");
-      console.log("dragleave");
     },
     drop(e) {
       e.stopPropagation();
       const undo = e.dataTransfer.getData("text/plain");
       const {
         mark: origMark,
-        num: origNum
-      } = e.currentTarget.children[0].dataset;
-      const [mark, num] = undo.split(",");
-      console.log(origMark, origNum, mark, num);
+        num: origNum,
+        color: origColor
+      } = e.currentTarget.children[0].dataset; //移到該容器,先檢查她最後一張照片的數字和符號
+      const [mark, num, color] = undo.split(","); //正在移的數字和符號
 
       const resultMark = mark !== origMark;
-      const resultNum = origNum - num === 1;
-      const isContainer = e.currentTarget.closest(".card-item"); //證明他的父層上不是在暫存卡牌的容器裡
-      if (resultMark && resultNum && isContainer === null) {
-        const drag = document.querySelector(
-          `img[data-mark='${mark}'][data-num='${num}']`
-        ).parentElement;
-        e.currentTarget.appendChild(drag);
+      const tempNum = origNum - num === 1;
+      const doneNum = parseInt(origNum) + 1 === parseInt(num);
+      const tempColor = color !== origColor;
+      const isContainer = e.currentTarget.closest(".card-item"); //證明他的父層上不是在暫存卡牌的容器裡,解決放了一張後不能再放第二章在同個地方
+      if (resultMark && tempNum && tempColor && isContainer === null) {
+        //正在玩的邏輯
+        this.movingDrag(mark, num, e.currentTarget);
+      } else if (!resultMark && doneNum && isContainer !== null) {
+        //符號相同,數字是逐漸往上加
+        this.movingDrag(mark, num, e.currentTarget);
+      } else if (
+        e.currentTarget.parentElement.className === "card-item" &&
+        isContainer !== null
+      ) {
+        //暫存的邏輯
+        this.movingDrag(mark, num, e.currentTarget);
       }
-      console.log("drop");
     },
     dragstart(e) {
       e.stopPropagation();
@@ -587,10 +597,9 @@ export default {
       window.setTimeout(() => {
         classList.add("none");
       }, 0);
-      const { mark, num } = e.target.children[0].dataset;
-      e.dataTransfer.setData("text/plain", `${mark},${num}`);
+      const { mark, num, color } = e.target.children[0].dataset;
+      e.dataTransfer.setData("text/plain", `${mark},${num},${color}`);
       //類似mousemove時啟動
-      console.log("start");
     },
     /* function drag() {
         類似mouseup時啟動
@@ -614,13 +623,55 @@ export default {
         `img[data-mark='${mark}'][data-num='${num}']`
       );
       const dragNext = drag.nextElementSibling;
-      console.log(e.currentTarget.children.length);
-      if (e.currentTarget.children.length > 0 && dragNext !== null) {
+      if (e.currentTarget.children.length === 0 && dragNext === null) {
         //證明暫存卡牌的容器裡目前只有一張卡
-        return false;
+        this.movingDrag(mark, num, e.currentTarget);
+      }
+    },
+    dragoverDone(e) {
+      e.preventDefault();
+      e.stopPropagation();
+    },
+    dropDone(e) {
+      e.stopPropagation();
+      const undo = e.dataTransfer.getData("text/plain");
+      const [mark, num] = undo.split(",");
+      console.log($(e.currentTarget).find("img"));
+      console.log($(e.currentTarget).find("img").length);
+      if (e.currentTarget.className.split(" ")[1] === mark && num === "1") {
+        //要裝在哪個花色的容器
+        this.movingDrag(mark, num, e.currentTarget);
+      } else if (
+        e.currentTarget.className.split(" ")[1] === mark &&
+        $(e.currentTarget).find("img").length + 1 === num
+      ) {
+        this.movingDrag(mark, num, e.currentTarget);
+      }
+    },
+    movingDrag(mark, num, containerDom) {
+      const drag = document.querySelector(
+        `img[data-mark='${mark}'][data-num='${num}']`
+      ).parentElement;
+      this.saveUndo(drag.parentElement, drag, containerDom);
+      containerDom.appendChild(drag);
+    },
+    saveUndo(back, element, go) {
+      this.undoNum++;
+      this.allUndo.push({
+        back,
+        element,
+        go
+      });
+    },
+    undoHandler(e) {
+      if (this.allUndo.length === 0) {
+        e.preventDefault();
       } else {
-        const emptyNum = drag.parentElement;
-        e.currentTarget.appendChild(emptyNum);
+        const dataIndex = this.allUndo.length - 1;
+        const { back, element, go } = this.allUndo[dataIndex];
+        go.removeChild(element);
+        back.appendChild(element);
+        this.allUndo.splice(dataIndex, 1);
       }
     },
     mousedown(e) {
@@ -657,7 +708,6 @@ export default {
       const result2 = numResult.every(e => {
         return e === true;
       });
-      //console.log(color,num,colorResult,numResult,result1,result2);
       if (result1 && result2) {
         e.currentTarget.setAttribute("draggable", true);
       } else if (color.length === 1 && num.length === 1) {
@@ -719,26 +769,9 @@ export default {
 
       [...document.querySelectorAll(".card-done")].forEach(e => {
         e.addEventListener("dragover", this.dragoverDone);
-        e.addEventListener("drop", this.dropTempDone);
+        e.addEventListener("drop", this.dropDone);
       });
-      /* [...document.querySelectorAll(`.empty${i} img`)].forEach(e=>{
-        e.addEventListener("keydown", this.keydown);
-        e.addEventListener("keyup", this.keyup);
-      }) */
     }
-
-    /* empty1.forEach(e => {
-      e.addEventListener("dragover", this.dragover);
-      e.addEventListener("dragenter", this.dragenter);
-      e.addEventListener("dragleave", this.dragleave);
-      e.addEventListener("drop", this.drop);
-    }); */
-
-    /* fill.forEach(e => {
-      e.addEventListener("dragstart", this.dragstart);
-      e.addEventListener("dragend", this.dragend);
-      e.addEventListener('drag', this.drag)
-    }); */
   },
   created() {
     this.card = this.card.sort((a, b) => {

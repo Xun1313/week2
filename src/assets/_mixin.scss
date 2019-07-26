@@ -1,0 +1,12 @@
+@mixin bg() {
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+$bgi: (
+  1: 'club',
+  2: 'diamond',
+  3: 'spade',
+  4: 'heart',
+);
