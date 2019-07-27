@@ -13,21 +13,53 @@
       </div>
 
       <div class="empty">
-        <div class="empty1" draggable="false"></div>
+        <div class="cardBoard">
+          <div class="cardBoard-bg">
+            <div class="empty1" draggable="false"></div>
+          </div>
+        </div>
 
-        <div class="empty1" draggable="false"></div>
+        <div class="cardBoard">
+          <div class="cardBoard-bg">
+            <div class="empty1" draggable="false"></div>
+          </div>
+        </div>
 
-        <div class="empty1" draggable="false"></div>
+        <div class="cardBoard">
+          <div class="cardBoard-bg">
+            <div class="empty1" draggable="false"></div>
+          </div>
+        </div>
 
-        <div class="empty1" draggable="false"></div>
+        <div class="cardBoard">
+          <div class="cardBoard-bg">
+            <div class="empty1" draggable="false"></div>
+          </div>
+        </div>
 
-        <div class="empty1" draggable="false"></div>
+        <div class="cardBoard">
+          <div class="cardBoard-bg">
+            <div class="empty1" draggable="false"></div>
+          </div>
+        </div>
 
-        <div class="empty1" draggable="false"></div>
+        <div class="cardBoard">
+          <div class="cardBoard-bg">
+            <div class="empty1" draggable="false"></div>
+          </div>
+        </div>
 
-        <div class="empty1" draggable="false"></div>
+        <div class="cardBoard">
+          <div class="cardBoard-bg">
+            <div class="empty1" draggable="false"></div>
+          </div>
+        </div>
 
-        <div class="empty1" draggable="false"></div>
+        <div class="cardBoard">
+          <div class="cardBoard-bg">
+            <div class="empty1" draggable="false"></div>
+          </div>
+        </div>
 
         <div class="undo" @click="undoHandler($event)">undo</div>
       </div>
@@ -39,7 +71,7 @@
 @import "./assets/_variable.scss";
 @import "./assets/_mixin.scss";
 @import "./assets/_grid.scss";
-.empty1:nth-child(4),
+.cardBoard:nth-child(4),
 .card-item:nth-child(4) {
   margin-right: auto !important;
   /* @include higherPad(){
@@ -49,7 +81,7 @@
     margin-right: 10px !important;
   } */
 }
-.empty1:nth-child(5),
+.cardBoard:nth-child(5),
 .card-item:nth-child(5) {
   margin-left: auto !important;
   /* @include higherPad(){
@@ -68,12 +100,12 @@
     height: 0;
     padding-bottom: 12.4%;
     background-color: $cache;
-    @include higherPad(){
-    margin:0 15px;
-  }
-  @include higherLapTop(){
-    margin:0 20px;
-  }
+    @include higherPad() {
+      margin: 0 15px;
+    }
+    @include higherLapTop() {
+      margin: 0 20px;
+    }
     margin: 0 10px;
     position: relative;
     > .card-temp,
@@ -139,31 +171,43 @@
   display: flex;
   width: 100%;
   position: relative;
-  .empty1 {
+  .cardBoard {
     margin: 30px 10px;
-    @include higherPad(){
-    margin:30px 15px;
-  }
-  @include higherLapTop(){
-    margin:30px 20px;
-  }
+    @include higherPad() {
+      margin: 30px 15px;
+    }
+    @include higherLapTop() {
+      margin: 30px 20px;
+    }
     width: 8%;
-    height: 100%;
+    height: 0;
+    padding-bottom: 12.5%;
+    position: relative;
     display: flex;
     flex-direction: column;
+    &-bg {
+      position: absolute;
+      background-image: url("../src/assets/card/container/cardboard_1.svg");
+      width: 100%;
+      height: 100%;
+    }
   }
   .undo {
     position: fixed;
     bottom: 10px;
     right: 10px;
-    background-color: #FDCF00;
+    background-color: #fdcf00;
     outline: 2px black solid;
     padding: 0 5px;
     cursor: pointer;
     &:hover {
-      background-color: darken(#FDCF00, 5%);
+      background-color: darken(#fdcf00, 5%);
     }
   }
+}
+
+.empty1 .empty1{
+  margin-top: -133%!important;
 }
 
 @for $i from 2 through 15 {
@@ -505,7 +549,7 @@ export default {
           bgi: require("./assets/card/spade/新接龍_黑桃6.svg"),
           color: "black",
           mark: "spade",
-          num: 7,
+          num: 6,
           id: Math.random() * 10000
         },
         {
