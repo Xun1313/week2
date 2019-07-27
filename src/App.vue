@@ -101,7 +101,6 @@
 .all-card {
   display: flex;
   flex-direction: column;
-  //justify-content: center;
   align-items: center;
   overflow: hidden;
   height: 100vh;
@@ -123,17 +122,12 @@
     width: 100%;
     height: auto;
   }
-  /* img:first-child {
-    bottom: 65%;
-  } */
 }
 .empty {
   display: flex;
   width: 100%;
-  //justify-content: center;
   .empty1 {
     margin: 30px 10px;
-    //margin-top: 200px;
     width: 10%;
     height: 100%;
     display: flex;
@@ -143,11 +137,12 @@
     position: fixed;
     bottom: 10px;
     right: 10px;
-    background-color: $cache;
+    background-color: #FDCF00;
+    outline: 2px black solid;
+    padding: 0 5px;
     cursor: pointer;
-    border-radius: 50%;
     &:hover {
-      background-color: darken($cache, 15%);
+      background-color: darken(#FDCF00, 5%);
     }
   }
 }
@@ -172,7 +167,6 @@
 
 <script>
 import $ from "jquery";
-/* import { log } from "util"; */
 export default {
   data() {
     return {
@@ -258,8 +252,7 @@ export default {
           id: Math.random() * 10000
         },
         {
-          //bgi: require("./assets/card/heart/新接龍_紅心.svg"),
-          bgi: "https://picsum.photos/id/54/150/300",
+          bgi: require("./assets/card/heart/新接龍_紅心Q.svg"),
           color: "red",
           mark: "heart",
           num: 12,
@@ -273,8 +266,7 @@ export default {
           id: Math.random() * 10000
         },
         {
-          //bgi: require("./assets/card/diamond/新接龍_方塊.svg"),
-          bgi: "https://picsum.photos/id/54/150/300",
+          bgi: require("./assets/card/diamond/新接龍_方塊A.svg"),
           color: "red",
           mark: "diamond",
           num: 1,
@@ -351,8 +343,7 @@ export default {
           id: Math.random() * 10000
         },
         {
-          //bgi: require("./assets/card/diamond/新接龍_方塊.svg"),
-          bgi: "https://picsum.photos/id/54/150/300",
+          bgi: require("./assets/card/diamond/新接龍_方塊Q.svg"),
           color: "red",
           mark: "diamond",
           num: 12,
@@ -366,8 +357,7 @@ export default {
           id: Math.random() * 10000
         },
         {
-          //bgi: require("./assets/card/club/新接龍_梅花.svg"),
-          bgi: "https://picsum.photos/id/54/150/300",
+          bgi: require("./assets/card/club/新接龍_梅花A.svg"),
           color: "black",
           mark: "club",
           num: 1,
@@ -409,8 +399,7 @@ export default {
           id: Math.random() * 10000
         },
         {
-          //bgi: require("./assets/card/club/新接龍_梅花.svg"),
-          bgi: "https://picsum.photos/id/54/150/300",
+          bgi: require("./assets/card/club/新接龍_梅花7.svg"),
           color: "black",
           mark: "club",
           num: 7,
@@ -424,8 +413,7 @@ export default {
           id: Math.random() * 10000
         },
         {
-          //bgi: require("./assets/card/club/新接龍_梅花9.svg"),
-          bgi: "https://picsum.photos/id/54/150/300",
+          bgi: require("./assets/card/club/新接龍_梅花9.svg"),
           color: "black",
           mark: "club",
           num: 9,
@@ -446,8 +434,7 @@ export default {
           id: Math.random() * 10000
         },
         {
-          //bgi: require("./assets/card/club/新接龍_梅花.svg"),
-          bgi: "https://picsum.photos/id/54/150/300",
+          bgi: require("./assets/card/club/新接龍_梅花Q.svg"),
           color: "black",
           mark: "club",
           num: 12,
@@ -461,16 +448,14 @@ export default {
           id: Math.random() * 10000
         },
         {
-          //bgi: require("./assets/card/spade/新接龍_黑桃.svg"),
-          bgi: "https://picsum.photos/id/54/150/300",
+          bgi: require("./assets/card/spade/新接龍_黑桃A.svg"),
           color: "black",
           mark: "spade",
           num: 1,
           id: Math.random() * 10000
         },
         {
-          //bgi: require("./assets/card/spade/新接龍_黑桃.svg"),
-          bgi: "https://picsum.photos/id/54/150/300",
+          bgi: require("./assets/card/spade/新接龍_黑桃2.svg"),
           color: "black",
           mark: "spade",
           num: 2,
@@ -540,8 +525,7 @@ export default {
           id: Math.random() * 10000
         },
         {
-          //bgi: require("./assets/card/spade/新接龍_黑桃.svg"),
-          bgi: "https://picsum.photos/id/54/150/300",
+          bgi: require("./assets/card/spade/新接龍_黑桃Q.svg"),
           color: "black",
           mark: "spade",
           num: 12,
