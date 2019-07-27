@@ -42,26 +42,38 @@
 .empty1:nth-child(4),
 .card-item:nth-child(4) {
   margin-right: auto !important;
-  @include lapTop() {
+  /* @include higherPad(){
+    margin-right: 20px !important;
+  } */
+  /* @include lapTop() {
     margin-right: 10px !important;
-  }
+  } */
 }
 .empty1:nth-child(5),
 .card-item:nth-child(5) {
   margin-left: auto !important;
-  @include lapTop() {
+  /* @include higherPad(){
+    margin-left: 20px !important;
+  } */
+  /* @include lapTop() {
     margin-left: 10px !important;
-  }
+  } */
 }
 .card-container {
   display: flex;
   width: 100%;
   //justify-content: center;
   .card-item {
-    width: 10%;
+    width: 8%;
     height: 0;
-    padding-bottom: 15.6%;
+    padding-bottom: 12.4%;
     background-color: $cache;
+    @include higherPad(){
+    margin:0 15px;
+  }
+  @include higherLapTop(){
+    margin:0 20px;
+  }
     margin: 0 10px;
     position: relative;
     > .card-temp,
@@ -126,9 +138,16 @@
 .empty {
   display: flex;
   width: 100%;
+  position: relative;
   .empty1 {
     margin: 30px 10px;
-    width: 10%;
+    @include higherPad(){
+    margin:30px 15px;
+  }
+  @include higherLapTop(){
+    margin:30px 20px;
+  }
+    width: 8%;
     height: 100%;
     display: flex;
     flex-direction: column;
